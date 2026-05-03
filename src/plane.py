@@ -23,6 +23,9 @@ class PlaneSprite(arcade.Sprite):
         # Sync the Arcade sprite attributes with our math model
         self.center_x = self.model.x
         self.center_y = self.model.y
-        # Add a -90 degree offset. Math 0 degrees is East, 
-        # but top-down airplane sprites usually face North natively.
-        self.angle = self.model.angle - 90
+        # Add a mapping to convert standard math angles to Arcade's sprite rotation.
+        # Arcade's Sprite.angle rotates clockwise for positive values in this version.
+        # Standard math (model.angle) rotates counter-clockwise.
+        # 0 deg Math = East -> 90 deg Arcade (Clockwise from North)
+        # 90 deg Math = North -> 0 deg Arcade
+        self.angle = 90 - self.model.angle

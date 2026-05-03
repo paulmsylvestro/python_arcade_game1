@@ -1,4 +1,5 @@
 import arcade
+import math
 import os
 from src.plane import PlaneSprite
 
@@ -29,10 +30,19 @@ class FlightSimGame(arcade.Window):
         # Optional: Load background if available
         bg_path = os.path.join(os.path.dirname(__file__), 'assets', 'background.png')
         if os.path.exists(bg_path):
-            background_sprite = arcade.Sprite(bg_path)
-            background_sprite.center_x = SCREEN_WIDTH / 2
-            background_sprite.center_y = SCREEN_HEIGHT / 2
-            self.background_list.append(background_sprite)
+            temp_sprite = arcade.Sprite(bg_path)
+            bg_width = temp_sprite.width
+            bg_height = temp_sprite.height
+            
+            # Create a grid of background tiles to cover a large flight area
+            start_x = SCREEN_WIDTH / 2
+            start_y = SCREEN_HEIGHT / 2
+            for grid_x in range(-10, 11):
+                for grid_y in range(-10, 11):
+                    bg_sprite = arcade.Sprite(bg_path)
+                    bg_sprite.center_x = start_x + grid_x * bg_width
+                    bg_sprite.center_y = start_y + grid_y * bg_height
+                    self.background_list.append(bg_sprite)
 
         self.player_sprite = PlaneSprite()
         self.player_list.append(self.player_sprite)
@@ -47,6 +57,36 @@ class FlightSimGame(arcade.Window):
         self.background_list.draw()
 
         self.player_list.draw()
+
+        # Draw an arrow pointing in the direction of movement
+        if self.player_sprite:
+            start_x = self.player_sprite.center_x
+            start_y = self.player_sprite.center_y
+            rad = math.radians(self.player_sprite.model.angle)
+            
+            # Arrow properties
+            length = 60
+            end_x = start_x + math.cos(rad) * length
+            end_y = start_y + math.sin(rad) * length
+            
+            # Draw main shaft
+            arcade.draw_line(start_x, start_y, end_x, end_y, arcade.color.RED, 3)
+            
+            # Draw arrowhead
+            arrow_len = 15
+            arrow_angle = math.radians(150)
+            
+            left_rad = rad + arrow_angle
+            right_rad = rad - arrow_angle
+            
+            left_x = end_x + math.cos(left_rad) * arrow_len
+            left_y = end_y + math.sin(left_rad) * arrow_len
+            
+            right_x = end_x + math.cos(right_rad) * arrow_len
+            right_y = end_y + math.sin(right_rad) * arrow_len
+            
+            arcade.draw_line(end_x, end_y, left_x, left_y, arcade.color.RED, 3)
+            arcade.draw_line(end_x, end_y, right_x, right_y, arcade.color.RED, 3)
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.W:

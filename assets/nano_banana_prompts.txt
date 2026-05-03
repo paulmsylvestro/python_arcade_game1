@@ -1,0 +1,13 @@
+These prompts can be used in Nano Banana to generate the necessary sprite assets for your flight simulator.
+
+---
+Asset 1: Player Airplane
+File Name: plane.png (Place this inside the 'assets' directory once generated)
+Prompt: 
+"A simple top-down 2D pixel art graphic of an airplane, facing right (East), on a solid transparent background. High contrast, clear outline."
+
+---
+Asset 2: Background Tile Map
+File Name: background.png (Place this inside the 'assets' directory once generated)
+Prompt: 
+"A seamless top-down 2D pixel art landscape texture for a video game background, features like grass and dirt. Tileable, cartoon style."

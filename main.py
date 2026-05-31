@@ -77,13 +77,18 @@ def update():
     # Collision Detection
     hit_info = player.intersects()
     if hit_info.hit:
-        print(f"CRASH! You hit an object.")
-        # Reset plane on crash
+        print(f"CRASH! Player position={player.position} hit entity={hit_info.entity} position={hit_info.entity.position} model={hit_info.entity.model}")
+        # Reset plane physics on crash
         player.physics.x, player.physics.y, player.physics.z = (0, 50, 0)
         player.physics.speed = 0
         player.physics.pitch = 0
         player.physics.yaw = 0
         player.physics.roll = 0
+        # Sync the entity immediately to avoid collision evaluation lag or infinite loops
+        player.x, player.y, player.z = (0, 50, 0)
+        player.rotation_x = 0
+        player.rotation_y = 0
+        player.rotation_z = 0
 
 import random
 
@@ -92,8 +97,8 @@ def generate_environment():
     for _ in range(80):
         m_x = random.uniform(-900, 900)
         m_z = random.uniform(-900, 900)
-        # Avoid putting mountains exactly where the player spawns
-        if abs(m_x) < 100 and abs(m_z) < 100:
+        # Avoid putting mountains near the player spawn point to prevent spawning inside one
+        if abs(m_x) < 250 and abs(m_z) < 250:
             continue
             
         m_scale_y = random.uniform(100, 300)
@@ -122,6 +127,9 @@ def generate_environment():
     for _ in range(400):
         t_x = random.uniform(-900, 900)
         t_z = random.uniform(-900, 900)
+        # Avoid putting trees near the spawn zone
+        if abs(t_x) < 50 and abs(t_z) < 50:
+            continue
         # Tree trunk (Ursina has no default cylinder, so we use a stretched cube)
         Entity(model='cube', color=color.brown, scale=(2, 8, 2), position=(t_x, 4, t_z), collider='box')
         # Tree leaves
@@ -131,6 +139,9 @@ def generate_environment():
     for _ in range(20):
         r_x = random.uniform(-900, 900)
         r_z = random.uniform(-900, 900)
+        # Avoid putting rivers near the spawn zone
+        if abs(r_x) < 50 and abs(r_z) < 50:
+            continue
         r_rot = random.uniform(0, 360)
         r_length = random.uniform(300, 1000)
         r_width = random.uniform(20, 60)

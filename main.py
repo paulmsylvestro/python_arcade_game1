@@ -5,7 +5,7 @@ from src.plane import PlaneSprite
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-SCREEN_TITLE = "2D Flight Simulator"
+SCREEN_TITLE = "3D Flight Simulator"
 
 class FlightSimGame(arcade.Window):
     def __init__(self):

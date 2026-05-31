@@ -1,3 +1,4 @@
-arcade
+ursina
+screeninfo
 Pillow
 pytest
